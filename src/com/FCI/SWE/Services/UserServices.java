@@ -16,6 +16,7 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -26,6 +27,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.FCI.SWE.ServicesModels.UserEntity;
+import com.google.appengine.api.datastore.Key;
 
 /**
  * This class contains REST services, also contains action function for web
@@ -83,6 +85,7 @@ public class UserServices {
 			object.put("Status", "Failed");
 
 		} else {
+			UserEntity.currentUser = user;
 			object.put("Status", "OK");
 			object.put("name", user.getName());
 			object.put("email", user.getEmail());
@@ -91,6 +94,79 @@ public class UserServices {
 		}
 		return object.toString();
 
+	}
+	
+	@POST
+	@Path("/LogoutService")
+	public String logoutService() {
+		JSONObject object = new JSONObject();
+		UserEntity user = UserEntity.currentUser;
+		if (user == null) {
+			object.put("Status", "Failed");
+
+		} else {
+			object.put("Status", "OK");
+			user = null;
+		}
+		return object.toString();
+	}
+	
+	@POST
+	@Path("/SendFriendRequestService")
+	public String sendFriendRequest(@FormParam("receiverEmail") String receiverEmail) {
+		JSONObject object = new JSONObject();
+		UserEntity user = UserEntity.currentUser;
+		if (user == null) {
+			object.put("Status", "Failed");
+
+		} else {
+			object.put("Status", "OK");
+			user.saveFriendRequest(receiverEmail);
+		}
+		return object.toString();
+	}
+	
+	@POST
+	@Path("/GetFriendRequestsService")
+	public String getFriendRequest() {
+		JSONObject object = new JSONObject();
+		UserEntity user = UserEntity.currentUser;
+		if (user == null) {
+			object.put("Status", "Failed");
+
+		} else {
+			object.put("Status", "OK");
+			List<String> requests = user.getFriendRequests();
+			
+			object.put("Size",requests.size());
+			for (int i = 0; i < requests.size(); ++i) {
+				object.put("friend" + i, requests.get(i));
+			}
+		}
+		return object.toString();
+	}
+		
+	@POST
+	@Path("/AcceptFriendRequestService")
+	public String acceptFriendRequest(@FormParam("friendEmail") String friendEmail) {
+		JSONObject object = new JSONObject();
+		UserEntity user = UserEntity.currentUser;
+		if (user == null) {
+			object.put("Status", "Failed");
+
+		} else {
+			object.put("Status", "OK");
+			Key k;
+			k = user.saveFriends(friendEmail);
+			
+			user.deleteRecord(k);
+			
+			if (k == null)
+				object.put("state", "No Friend Request Exist with this email.");
+			else
+				object.put("state", "Request Have been approved.");
+		}
+		return object.toString();
 	}
 
 }
