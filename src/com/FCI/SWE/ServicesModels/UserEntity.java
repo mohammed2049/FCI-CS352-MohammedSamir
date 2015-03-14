@@ -1,5 +1,6 @@
 package com.FCI.SWE.ServicesModels;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Transaction;
@@ -32,6 +34,7 @@ public class UserEntity {
 	private String email;
 	private String password;
 	private long id;
+	public static UserEntity currentUser = null;
 
 	/**
 	 * Constructor accepts user data
@@ -132,5 +135,99 @@ public class UserEntity {
 		}
 		return true;
 
+	}
+	
+	public Boolean saveFriendRequest(String receiverEmail) {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Transaction txn = datastore.beginTransaction();
+		
+		try {
+		Entity employee = new Entity("friendrequest");
+
+		employee.setProperty("senderEmail", this.email);
+		employee.setProperty("receiverEmail", receiverEmail);
+		
+		datastore.put(employee);
+		txn.commit();
+		}finally{
+			if (txn.isActive()) {
+		        txn.rollback();
+		    }
+		}
+		return true;
+
+	}
+	
+	public List<String> getFriendRequests() {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+
+		Query gaeQuery = new Query("friendrequest");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		List<String> emails = new ArrayList<String> ();
+		for (Entity entity : pq.asIterable()) {
+			if (entity.getProperty("receiverEmail").toString().equals(this.email)) {
+				emails.add(entity.getProperty("senderEmail").toString());
+			}
+		}
+
+		return emails;
+	}
+
+	public Key saveFriends(String friendEmail) {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Transaction txn = datastore.beginTransaction();
+		
+		
+		boolean good = false;
+		
+		
+		Query gaeQuery = new Query("friendrequest");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		Key k = null;
+		for (Entity entity : pq.asIterable()) {
+			if (entity.getProperty("senderEmail").toString().equals(friendEmail)) {
+				k = entity.getKey();
+				good = true;
+			}
+		}
+		
+		
+		System.out.println(k);
+		
+		if (good == false) return k;
+		
+		try {
+		Entity employee = new Entity("friends");
+
+		employee.setProperty("friend1", friendEmail);
+		employee.setProperty("friend2", this.email);
+		
+		datastore.put(employee);
+		txn.commit();
+		}finally{
+			if (txn.isActive()) {
+		        txn.rollback();
+		    }
+		}
+		return k;
+	}
+
+	public void deleteRecord(Key k) {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Transaction txn = datastore.beginTransaction();
+		
+		try {
+		
+		datastore.delete(k);
+		txn.commit();
+		}finally{
+			if (txn.isActive()) {
+		        txn.rollback();
+		    }
+		}
 	}
 }
