@@ -29,6 +29,7 @@ public class UserEntity {
 	private String name;
 	private String email;
 	private String password;
+	private static UserEntity currentUser = null;
 
 	/**
 	 * Constructor accepts user data
@@ -40,12 +41,37 @@ public class UserEntity {
 	 * @param password
 	 *            user provided password
 	 */
-	public UserEntity(String name, String email, String password) {
+	private UserEntity(String name, String email, String password) {
 		this.name = name;
 		this.email = email;
 		this.password = password;
-
 	}
+	
+	private UserEntity() {
+		name = "";
+		email = "";
+		password = "";
+	}
+	
+	public static UserEntity getCurrentActiveUser() {
+		if (currentUser == null) {
+			currentUser = new UserEntity();
+		}
+		return currentUser;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 
 	public String getName() {
 		return name;

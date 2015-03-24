@@ -2,10 +2,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1256">
-<title>Entry Point</title>
+<title>Create Group Chat Page</title>
 </head>
 <body>
-<a href="/social/signup/">Sign up</a> <br>
-<a href="/social/login/">Login</a> <br>
+	<p> You MUST be logged in </p>
+  	<a href="/social">Register Or Log in</a> <br>
 </body>
 </html>
