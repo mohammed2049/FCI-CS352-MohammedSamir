@@ -47,17 +47,16 @@ org.json.simple.parser.*"%>
 <body>
 <p> Welcome b2a ya ${it.name} </p>
 <p> Friend Request Report: <br> <%=ret%> </p>
-<p> This is should be user home page </p>
-<p> Current implemented services "http://fci-swe-apps.appspot.com/rest/RegistrationService --- {requires: uname, email, password}" </p>
-<p> and "http://fci-swe-apps.appspot.com/rest/LoginService --- {requires: uname,  password}" </p>
-<p> you should implement sendFriendRequest service and addFriend service </p>
 	<form action="/social/SendRequest" method="post">
-  		Send Friend Request To Email: <input type="text" name="receiverEmail" /> <br>
+  		Send Friend Request To Email: <input type="text" name="receiverEmail" />
   		<input type="submit" value="Send Friend Request">
   	</form>
   	<form action="/social/AcceptRequest" method="post">
-  		Approved Friend Email: <input type="text" name="friendEmail" /> <br>
+  		Approved Friend Email: <input type="text" name="friendEmail" />
   		<input type="submit" value="Accept Friend Request">
+  	</form>
+  	<form action="/social/GroupChatData" method="get">
+  		<input type="submit" value="Start Group Chat">
   	</form>
   	<a href="/social/LogOut/">Log out</a> <br>
 </body>

@@ -117,7 +117,6 @@ public class UserController {
 	public String response(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
 
-		//String serviceUrl = "http://fci-swe-apps.appspot.com/rest/RegistrationService";
 		String serviceUrl = "http://localhost:8888/rest/RegistrationService";
 		String urlParameters = "uname=" + uname + "&email=" + email
 				+ "&password=" + pass;
@@ -157,11 +156,11 @@ public class UserController {
 	 */
 	@POST
 	@Path("/home")
-	@Produces("text/html")
+//	@Produces("text/html")
 	public Response home(@FormParam("uname") String uname,
 			@FormParam("password") String pass) {
+		
 		String urlParameters = "uname=" + uname + "&password=" + pass;
-
 		String retJson = Connection.connect(
 				"http://localhost:8888/rest/LoginService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
@@ -173,6 +172,7 @@ public class UserController {
 			JSONObject object = (JSONObject) obj;
 			if (object.get("Status").equals("Failed"))
 				return null;
+			
 			Map<String, String> map = new HashMap<String, String>();
 			
 			map.put("name", uname);

@@ -117,7 +117,6 @@ public class UserEntity {
 		Query gaeQuery = new Query("users");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
-		System.out.println("Size = " + list.size());
 		
 		try {
 		Entity employee = new Entity("users", list.size() + 2);
@@ -195,7 +194,6 @@ public class UserEntity {
 		}
 		
 		
-		System.out.println(k);
 		
 		if (good == false) return k;
 		
