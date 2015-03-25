@@ -19,40 +19,11 @@ org.json.simple.parser.*"%>
 	content="text/html; charset=windows-1256">
 <title>User Home</title>
 </head>
-<%
-	String ret = "";
-	try {
-		String urlParameters = "";
 
-		String retJson = Connection.connect(
-				"http://localhost:8888/social/GetRequests",
-				urlParameters, "POST",
-				"application/x-www-form-urlencoded;charset=UTF-8");
-
-		JSONParser parser = new JSONParser();
-		Object obj = parser.parse(retJson.toString());
-		JSONObject jsonObj = (JSONObject) obj;
-		
-		if (jsonObj.get("Status").toString().equals("Ok")) {
-			int Size = Integer.parseInt(jsonObj.get("Size").toString());
-			if (Size == 0) {
-				ret = "No friend requests, You are For Ever Alone";
-			} else {
-				for (int i = 0; i < Size; ++i) {
-					ret += "email: "
-							+ jsonObj.get("friend" + i).toString()
-							+ " Sent you friend request. <br>";
-				}
-			}
-		}
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-%>
 <body>
 	<p>
 		Friend Request Report: <br>
-		<%=ret%>
+	
 	</p>
 	<form action="/social/SendRequest" method="post">
 		Send Friend Request To Email: <input type="text" name="receiverEmail" />
@@ -70,6 +41,5 @@ org.json.simple.parser.*"%>
   		<input type="submit" value="Send Message">
   	</form>
 
-  	
 </body>
 </html>

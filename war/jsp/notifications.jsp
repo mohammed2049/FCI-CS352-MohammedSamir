@@ -1,3 +1,4 @@
+<%@page import="com.FCI.SWE.Services.SingleChatNotification"%>
 <%@page import="com.FCI.SWE.ServicesModels.UserEntity"%>
 <%@page import="com.FCI.SWE.Services.GroupChatNotification"%>
 <%@page import="com.FCI.SWE.Models.User"%>
@@ -37,26 +38,46 @@ org.json.simple.parser.*"%>
 			out.print(S);
 		}
 	%>
-	<% 
-	String urlParameters = "";
+	<%
+		List<Integer> se1 = SingleChatNotification
+				.getmessageid(UserEntity.currentUser.getEmail());
+		
+		for (Integer f : se1) {
+			String S = String
+					.format("<form action='/social/SendMessage' method='POST' >"
+							+ "<input type='submit' value='go to groupchat%d'>"
+							+ "<input type='hidden' value=%d name='id'>"
+							+ "</form>", f, f);
+			out.print(S);
+		}
+	%>
+	<%
+		String urlParameters = "";
 
-	String retJson = Connection.connect(
-			"http://localhost:8888/rest/GetFriendRequestsService", urlParameters,
-			"POST", "application/x-www-form-urlencoded;charset=UTF-8");
-	
-    JSONParser parser = new JSONParser();
-    Object obj;
-    try {
-    	obj = parser.parse(retJson);
-        JSONObject object = (JSONObject) obj;
-        
-        if (object.get("Status").equals("OK")){
-        	out.print(object.toString()); 
-        }
-    } catch (ParseException e) {
-        e.printStackTrace();
-    }
+		String retJson = Connection.connect(
+				"http://localhost:8888/rest/GetFriendRequestsService",
+				urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
 
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			if (object.get("Status").equals("OK")) {
+				Integer i = 0;
+				while (object.containsKey("friend" + i.toString())) {
+					String S = String
+							.format("<form action='/social/AcceptRequest' method='POST'><input type='hidden' name='friendEmail' value=%s><input type='submit' value='Accept %s'></form>",
+									object.get("friend" + i.toString()),object.get("friend" + i.toString()));
+					out.print(S);
+					i++;
+				}
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 	%>
 </body>
 </html>
