@@ -12,11 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -30,6 +26,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.FCI.SWE.Models.GroupChatNotificationModel;
 import com.FCI.SWE.Models.User;
 import com.FCI.SWE.ServicesModels.UserEntity;
 
@@ -84,7 +81,7 @@ public class GroupChatController {
 	@POST
 	@Path("/OpenGroupChat")
 	public Response openGroupChatMessage(@FormParam("id") String id) {
-		
+		GroupChatNotificationModel.deletenotification(UserEntity.currentUser.getEmail(), Integer.parseInt(id));
 		String serviceUrl = "http://localhost:8888/rest/GetGroupChatDataService";
 		String urlParameters = "id=" + id;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",

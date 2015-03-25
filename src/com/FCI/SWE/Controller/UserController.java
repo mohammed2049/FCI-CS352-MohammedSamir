@@ -68,7 +68,14 @@ public class UserController {
 		return Response.ok(new Viewable("/jsp/register")).build();
 	}
 
-	
+	@GET
+	@Path("/notifications")
+	public Response Notifications() {
+		if (UserEntity.currentUser != null) {
+			return Response.ok(new Viewable("/jsp/notifications")).build();
+		}
+		return null;
+	}
 	@GET
 	@Path("/search")
 	public Response search(){
