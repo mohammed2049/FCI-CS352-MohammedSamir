@@ -28,7 +28,7 @@ org.json.simple.parser.*"%>
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 		
 		JSONParser parser = new JSONParser();
-		Object obj = parser.parse(retJson);
+		Object obj = parser.parse(retJson.toString());
 		JSONObject jsonObj = (JSONObject) obj;
 		
 		int Size = Integer.parseInt(jsonObj.get("Size").toString());
@@ -55,9 +55,13 @@ org.json.simple.parser.*"%>
   		Approved Friend Email: <input type="text" name="friendEmail" />
   		<input type="submit" value="Accept Friend Request">
   	</form>
+  	<form action="/social/SendMessagePage" method="get">
+  		<input type="submit" value="Send Message">
+  	</form>
   	<form action="/social/GroupChatData" method="get">
   		<input type="submit" value="Start Group Chat">
   	</form>
+  	
   	<a href="/social/LogOut/">Log out</a> <br>
 </body>
 </html>
