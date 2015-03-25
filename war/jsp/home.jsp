@@ -69,9 +69,7 @@ org.json.simple.parser.*"%>
   	<form action="/social/SendMessagePage" method="get">
   		<input type="submit" value="Send Message">
   	</form>
-  	<form action="/social/GroupChatData" method="get">
-  		<input type="submit" value="Start Group Chat">
-  	</form>
+
   	
 </body>
 </html>
