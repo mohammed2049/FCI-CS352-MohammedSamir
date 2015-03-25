@@ -30,7 +30,7 @@ org.json.simple.parser.*"%>
 				"application/x-www-form-urlencoded;charset=UTF-8");
 
 		JSONParser parser = new JSONParser();
-		Object obj = parser.parse(retJson);
+		Object obj = parser.parse(retJson.toString());
 		JSONObject jsonObj = (JSONObject) obj;
 		
 		if (jsonObj.get("Status").toString().equals("Ok")) {
@@ -65,5 +65,13 @@ org.json.simple.parser.*"%>
 	<a href="/social/LogOut/">Log out</a>
 	<br>
 	<a href="/social/notifications">My Notifications</a>
+	<br>
+  	<form action="/social/SendMessagePage" method="get">
+  		<input type="submit" value="Send Message">
+  	</form>
+  	<form action="/social/GroupChatData" method="get">
+  		<input type="submit" value="Start Group Chat">
+  	</form>
+  	
 </body>
 </html>

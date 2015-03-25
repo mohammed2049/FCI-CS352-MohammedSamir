@@ -1,7 +1,6 @@
 package com.FCI.SWE.ServicesModels;
 
 import java.io.BufferedReader;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -40,68 +39,61 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Transaction;
 
 
-public class GroupChatEntity {
-	private String chatName;
-	private String participantsEmails;
+
+public class SendMessageEntity {
+	private String sender;
+	private String reciever;
 	private String messages;
-	private String owner;
 	private long id;
 	
-	public String getChatName() {
-		return chatName;
-	}
-	
-	public String getParticipantsEmails() {
-		return participantsEmails;
-	}
-	
-	public String getMessages() {
+	public String getMessage() {
 		return messages;
 	}
-	
-	public String getOwner() {
-		return owner;
+	public String getSender() {
+		return sender;
 	}
-	
+
+	public String getreciever() {
+		return reciever;
+	}
+
 	public long getId() {
 		return id;
 	}
 	
-	public GroupChatEntity(String id) {
+	public SendMessageEntity(String id) {
 		this.id = Integer.parseInt(id);
 		messages = "";
-		chatName = "";
-		participantsEmails = "";
-		owner = "";
+		reciever = "";
+		sender = "";
 	}
 	
-	public GroupChatEntity(String participantsEmails, String chatName) {
-		this.chatName = chatName;
-		this.participantsEmails = participantsEmails;
-		messages = "";
-		owner = UserEntity.currentUser.getEmail();
+	public SendMessageEntity(String reciever ,String messages) {
+		this.reciever = reciever;
+		this.messages = messages;
+		sender = UserEntity.currentUser.getEmail();
 	}
-
-	public Boolean saveGroupChat() {
+	
+	public Boolean saveMessage() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
 		
-		Query gaeQuery = new Query("groupchat");
+		Query gaeQuery = new Query("singlemessage");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
 		
+		
 		try {
 			id = list.size() + 2;
-			Entity groupchat = new Entity("groupchat", id);
+			Entity sendmessage = new Entity("singlemessage", id);
 			
-			groupchat.setProperty("messages", messages);
-			groupchat.setProperty("owner", owner);
-			groupchat.setProperty("chatName", chatName);
-			groupchat.setProperty("participantsEmails", participantsEmails);
+			sendmessage.setProperty("messages", messages);
+			sendmessage.setProperty("sender", sender);
+			sendmessage.setProperty("reciever", reciever);
 			
 			
-			datastore.put(groupchat);
+			datastore.put(sendmessage);
 			txn.commit();
 		}finally{
 			if (txn.isActive()) {
@@ -110,34 +102,43 @@ public class GroupChatEntity {
 		}
 		return true;
 	}
-
-	public boolean getGroupChat() {
+	
+	public String getMessages() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
 		
 		try {
-			Key key = KeyFactory.createKey("groupchat", id);
-			try {
-				Entity entity = datastore.get(key);
-				messages = entity.getProperty("messages").toString();
-				chatName = entity.getProperty("chatName").toString();
-				participantsEmails = entity.getProperty("participantsEmails").toString();
-				owner = entity.getProperty("owner").toString();
-				
-			} catch (EntityNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			Query gaeQuery = new Query("singlemessage");
+			PreparedQuery pq = datastore.prepare(gaeQuery);
+			List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+			
+			String ret = "";
+
+			for (Entity entity : pq.asIterable()) {
+				if (entity.getProperty("sender").equals(reciever) || entity.getProperty("sender").equals(sender))
+					ret += entity.getProperty("sender") + ": " + entity.getProperty("messages").toString() + "\n";
 			}
+			
+			String nret = "";
+			
+			for (int i = 0; i < ret.length(); ++i) {
+				if (ret.charAt(i) == '\n') {
+					nret += "<br>";
+				} else {
+					nret += ret.charAt(i);
+				}
+			}
+			
 			txn.commit();
+			return nret;
 		}finally{
 			if (txn.isActive()) {
 		        txn.rollback();
 		    }
 		}
-		return true;
 	}
-
+	
 	public boolean updateMessages(String message) {
 		String nmessage = "";
 		for (int i = 0; i < message.length(); ++i) {
@@ -154,15 +155,13 @@ public class GroupChatEntity {
 		Transaction txn = datastore.beginTransaction();
 		
 		try {
-			Entity groupchat = new Entity("groupchat", id);
+			Entity sendmessage = new Entity("sendmessage", id);
 			
-			groupchat.setProperty("messages", messages);
-			groupchat.setProperty("owner", owner);
-			groupchat.setProperty("chatName", chatName);
-			groupchat.setProperty("participantsEmails", participantsEmails);
+			sendmessage.setProperty("messages", messages);
+			sendmessage.setProperty("sender", sender);
+			sendmessage.setProperty("reciever", reciever);
 			
-			
-			datastore.put(groupchat);
+			datastore.put(sendmessage);
 			txn.commit();
 		}finally{
 			if (txn.isActive()) {
@@ -172,9 +171,3 @@ public class GroupChatEntity {
 		return true;
 	}
 }
-
-
-
-
-
-
