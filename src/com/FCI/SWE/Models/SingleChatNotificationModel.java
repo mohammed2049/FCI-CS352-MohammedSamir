@@ -10,30 +10,30 @@ import org.json.simple.parser.ParseException;
 import com.google.appengine.api.datastore.*;
 
 public class SingleChatNotificationModel {
-	public static Boolean saveSingleChatNotification(String useremail,
-			long groupchatid) {
+	public static Boolean saveSingleChatNotification(String reciever,
+			String sender) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Entity employee = new Entity("signlechatnotification");
-		employee.setProperty("groupchatid", groupchatid);
-		employee.setProperty("useremail", useremail);
+		employee.setProperty("reciever", reciever);
+		employee.setProperty("sender", sender);
 		datastore.put(employee);
 		return true;
 	}
 
-	public static List<Integer> singleChatIds(String useremail) {
+	public static List<String> singleChatSenders(String reciever) {
 
-		List<Integer> ne = new ArrayList<Integer>();
+		List<String> ne = new ArrayList<String>();
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Query gaeQuery = new Query("signlechatnotification");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		
 		for (Entity entity : pq.asIterable()) {
-			System.out.println(entity.getProperty("useremail").toString());
-			if (entity.getProperty("useremail").toString().equals(useremail)) {
-				Integer res = Integer.parseInt(entity
-						.getProperty("groupchatid").toString());
+//			System.out.println(entity.getProperty("useremail").toString());
+			if (entity.getProperty("reciever").toString().equals(reciever)) {
+				String res = entity
+						.getProperty("sender").toString();
 				if (!ne.contains(res))
 					ne.add(res);
 			}
@@ -55,26 +55,25 @@ public class SingleChatNotificationModel {
 		}
 		return true;
 	}
-	public static boolean deletenotification(String email, Integer id) {
-		List<Key> K = getkey(email, id);
-		System.out.printf("Size : %d\n",K.size());
+	public static boolean deletenotification(String reciever, String sender) {
+		List<Key> K = getkey(reciever, sender);
+//		System.out.printf("Size : %d\n",K.size());
 		for (Key k : K) 
 			deletenotificationkey(k);
-		
 		
 		return true;
 	}
 
-	public static List<Key> getkey(String email, Integer id) {
+	public static List<Key> getkey(String reciever, String sender) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		List<Key> ls = new ArrayList<Key>();
 		Query gaeQuery = new Query("signlechatnotification");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		for (Entity entity : pq.asIterable()) {
-			if (entity.getProperty("useremail").toString().equals(email)
-					&& entity.getProperty("groupchatid").toString()
-							.equals(id.toString())) {
+			if (entity.getProperty("reciever").toString().equals(reciever)
+					&& entity.getProperty("sender").toString()
+							.equals(sender)) {
 				ls.add(entity.getKey());
 			}
 		}

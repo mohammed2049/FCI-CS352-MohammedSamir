@@ -115,10 +115,10 @@ public class SendMessageEntity {
 			
 			String ret = "";
 
-			for (Entity entity : pq.asIterable()) {
-				if (entity.getProperty("sender").equals(reciever) || entity.getProperty("sender").equals(sender))
+			for (Entity entity : pq.asIterable()) 
+				if ((entity.getProperty("sender").equals(reciever) && entity.getProperty("reciever").equals(sender)) ||(entity.getProperty("sender").equals(sender) && entity.getProperty("reciever").equals(reciever))  )
 					ret += entity.getProperty("sender") + ": " + entity.getProperty("messages").toString() + "\n";
-			}
+			
 			
 			String nret = "";
 			

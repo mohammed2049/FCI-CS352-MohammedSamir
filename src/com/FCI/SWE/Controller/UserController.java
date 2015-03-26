@@ -74,7 +74,7 @@ public class UserController {
 		if (UserEntity.currentUser != null) {
 			return Response.ok(new Viewable("/jsp/notifications")).build();
 		}
-		return null;
+	 return Response.ok(new Viewable("/jsp/youMustBeLoggedIn")).build();
 	}
 	@GET
 	@Path("/search")

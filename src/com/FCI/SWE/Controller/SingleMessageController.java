@@ -31,6 +31,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.FCI.SWE.Models.GroupChatNotificationModel;
+import com.FCI.SWE.Models.SingleChatNotificationModel;
 import com.FCI.SWE.Models.User;
 import com.FCI.SWE.ServicesModels.UserEntity;
 
@@ -81,7 +82,7 @@ public class SingleMessageController {
 	@POST
 	@Path("/GetMessage")
 	public Response getMessage(@FormParam("reciever") String reciever) {
-//		SingleChatNotificationModel.deletenotification(UserEntity.currentUser.getEmail());
+		SingleChatNotificationModel.deletenotification(UserEntity.currentUser.getEmail(), reciever);
 		String serviceUrl = "http://localhost:8888/rest/GetMessageService";
 		String urlParameters = "reciever=" + reciever;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
@@ -97,7 +98,7 @@ public class SingleMessageController {
 			
 			Map<String, String> map = new HashMap<String, String>();
 
-			map.put("reciever", object.get("reciever").toString());
+			map.put("reciever", reciever);
 			map.put("messages", object.get("messages").toString());
 			
 			return Response.ok(new Viewable("/jsp/sendMessage", map)).build();

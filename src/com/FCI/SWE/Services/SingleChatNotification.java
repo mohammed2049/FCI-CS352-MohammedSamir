@@ -16,17 +16,16 @@ import com.FCI.SWE.Models.SingleChatNotificationModel;
 import com.FCI.SWE.ServicesModels.GroupEntity;
 
 public class SingleChatNotification {
-	String userEmail;
-	Integer groupChatId;
-	public SingleChatNotification(String userEmail,Integer groupChatId){
-		this.userEmail=userEmail;
-		this.groupChatId=groupChatId;
+	String reciever;
+	String sender;
+	public SingleChatNotification(String reciever,String sender){
+		this.sender=sender;
+		this.reciever=reciever;
 	}
 	public void nnotify(){
-		
-		SingleChatNotificationModel.saveSingleChatNotification(userEmail, groupChatId);
+		SingleChatNotificationModel.saveSingleChatNotification(reciever, sender);
 	}
-	public static List<Integer>getmessageid(String useremail){
-		return SingleChatNotificationModel.singleChatIds(useremail);
+	public static List<String>getsenders(String receiver){
+		return SingleChatNotificationModel.singleChatSenders(receiver);
 	}
 }

@@ -45,8 +45,8 @@ public class SendMessageServices {
 			SendMessageEntity sendmessage = new SendMessageEntity(reciever,message);
 			sendmessage.saveMessage();
 
-//			SingleChatNotification singleMessageNotification = new SingleChatNotification(reciever, (int) sendmessage.getId());
-//			singleMessageNotification.nnotify();
+			SingleChatNotification singleMessageNotification = new SingleChatNotification(reciever, UserEntity.currentUser.getEmail());
+			singleMessageNotification.nnotify();
 
 			object.put("Status", "Ok");
 			object.put("messages", sendmessage.getMessages());

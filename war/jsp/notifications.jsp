@@ -1,6 +1,7 @@
 <%@page import="com.FCI.SWE.Services.SingleChatNotification"%>
 <%@page import="com.FCI.SWE.ServicesModels.UserEntity"%>
 <%@page import="com.FCI.SWE.Services.GroupChatNotification"%>
+<%@page import="com.FCI.SWE.Services.*"%>
 <%@page import="com.FCI.SWE.Models.User"%>
 <%@ page import="java.util.*"%>
 <%@ page
@@ -39,15 +40,15 @@ org.json.simple.parser.*"%>
 		}
 	%>
 	<%
-		List<Integer> se1 = SingleChatNotification
-				.getmessageid(UserEntity.currentUser.getEmail());
+		List<String> se1 = SingleChatNotification.getsenders(UserEntity.currentUser.getEmail());
 		
-		for (Integer f : se1) {
+		for (String f : se1) {
 			String S = String
-					.format("<form action='/social/SendMessage' method='POST' >"
-							+ "<input type='submit' value='go to groupchat%d'>"
-							+ "<input type='hidden' value=%d name='id'>"
+					.format("<form action='/social/GetMessage' method='POST' >"
+							+ "<input type='submit' value='go to message%s'>"
+							+ "<input type='hidden' value='%s' name='reciever'>"
 							+ "</form>", f, f);
+			System.out.print(S);
 			out.print(S);
 		}
 	%>
