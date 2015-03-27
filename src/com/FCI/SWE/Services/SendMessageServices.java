@@ -32,30 +32,28 @@ import com.google.appengine.api.datastore.Key;
 
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
-
 public class SendMessageServices {
 	@POST
 	@Path("/SendMessageService")
-	public String SendMessageService(@FormParam("reciever") String reciever, @FormParam("message") String message) {
+	public String SendMessageService(@FormParam("reciever") String reciever,
+			@FormParam("message") String message) {
 		JSONObject object = new JSONObject();
 		if (UserEntity.currentUser == null) {
 			object.put("Status", "Failed");
 		} else {
-			
-			
-			SendMessageEntity sendmessage = new SendMessageEntity(reciever, message);
+
+			SendMessageEntity sendmessage = new SendMessageEntity(reciever,message);
 			sendmessage.saveMessage();
-			
-//			SingleChatNotification singleMessageNotification = new SingleChatNotification (reciever, sendmessage.getId());
-//			singleMessageNotification.nnotify();
-			
+
+			SingleChatNotification singleMessageNotification = new SingleChatNotification(reciever, UserEntity.currentUser.getEmail());
+			singleMessageNotification.nnotify();
+
 			object.put("Status", "Ok");
 			object.put("messages", sendmessage.getMessages());
 		}
 		return object.toString();
 	}
-	
-	
+
 	@POST
 	@Path("/GetMessageService")
 	public String getMessageService(@FormParam("reciever") String reciever) {
@@ -63,10 +61,9 @@ public class SendMessageServices {
 		if (UserEntity.currentUser == null) {
 			object.put("Status", "Failed");
 		} else {
-			
-			
+
 			SendMessageEntity sendmessage = new SendMessageEntity(reciever, "");
-			
+
 			object.put("Status", "Ok");
 			object.put("messages", sendmessage.getMessages());
 		}

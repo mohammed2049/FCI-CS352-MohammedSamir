@@ -34,21 +34,23 @@ import com.google.appengine.api.datastore.Key;
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
 public class GroupChatServices {
-	
+
 	@POST
 	@Path("/CreateGroupChatService")
-	public String createGroupChat(@FormParam("participants") String participants, @FormParam("chatName") String chatName) {
+	public String createGroupChat(
+			@FormParam("participants") String participants,
+			@FormParam("chatName") String chatName) {
 		JSONObject object = new JSONObject();
 		if (UserEntity.currentUser == null) {
 			object.put("Status", "Failed");
 		} else {
 			participants += "," + UserEntity.currentUser.getEmail();
 			String participantEmail[] = participants.split(",");
-			
-			
-			GroupChatEntity groupChat = new GroupChatEntity(participants, chatName);
+
+			GroupChatEntity groupChat = new GroupChatEntity(participants,
+					chatName);
 			groupChat.saveGroupChat();
-			
+
 			object.put("Status", "Ok");
 			object.put("id", groupChat.getId());
 			object.put("messages", groupChat.getMessages());
@@ -56,12 +58,12 @@ public class GroupChatServices {
 		}
 		return object.toString();
 	}
-	
+
 	@POST
 	@Path("/GetGroupChatDataService")
 	public String getGroupChatData(@FormParam("id") String id) {
 		JSONObject ret = new JSONObject();
-		
+
 		if (UserEntity.currentUser == null) {
 			ret.put("Status", "Failed");
 			return ret.toString();
@@ -69,48 +71,43 @@ public class GroupChatServices {
 
 		GroupChatEntity groupChat = new GroupChatEntity(id);
 		groupChat.getGroupChat();
-		
+
 		ret.put("Status", "Ok");
 		ret.put("messages", groupChat.getMessages());
 		ret.put("chatName", groupChat.getChatName());
 		return ret.toString();
 	}
-	
+
 	@POST
 	@Path("/SendGroupChatMessageService")
-	public String sendGroupChatMessage(@FormParam("id") String id, @FormParam("message") String message) {
+	public String sendGroupChatMessage(@FormParam("id") String id,
+			@FormParam("message") String message) {
 		JSONObject ret = new JSONObject();
-		
+
 		if (UserEntity.currentUser == null) {
 			ret.put("Status", "Failed");
 			return ret.toString();
 		}
-		
+
 		GroupChatEntity groupChat = new GroupChatEntity(id);
 		groupChat.getGroupChat();
 		groupChat.updateMessages(message);
-		
+
 		String participants[] = groupChat.getParticipantsEmails().split(",");
 		int n = participants.length;
+
+		List<GroupChatNotification> ls = new ArrayList<GroupChatNotification>();
+		for (int i = 0; i < n; ++i){ 
+			System.out.println(participants[i]);
+			ls.add(new GroupChatNotification(participants[i], Integer.parseInt(id)));
+		}
+		for (int i = 0; i < n; ++i) 
+			ls.get(i).nnotify();
 		
-//		List<GroupChatNotification> ls = new ArrayList<GroupChatNotification> ();
-//		for (int i = 0; i < n; ++i) {
-//			ls.add(new GroupChatNotification(participants[i], id));
-//		}
-//		
-//		for (int i = 0; i < n; ++i) {
-//			ls.get(i).nnotify();
-//
-		
+
 		ret.put("Status", "Ok");
 		ret.put("messages", groupChat.getMessages());
 		ret.put("chatName", groupChat.getChatName());
 		return ret.toString();
 	}
 }
-
-
-
-
-
-
