@@ -55,7 +55,7 @@ public class UserController {
 	@Path("/doSearch")
 	public Response usersList(@FormParam("uname") String uname){
 		System.out.println(uname);
-		String serviceUrl = "http://localhost/rest/SearchService";
+		String serviceUrl = "http://se-pro.appspot.com/rest/SearchService";
 		String urlParameters = "uname=" + uname;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
@@ -124,7 +124,7 @@ public class UserController {
 	public String response(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
 
-		String serviceUrl = "http://localhost:8888/rest/RegistrationService";
+		String serviceUrl = "http://se-pro.appspot.com/rest/RegistrationService";
 		String urlParameters = "uname=" + uname + "&email=" + email
 				+ "&password=" + pass;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
@@ -169,7 +169,7 @@ public class UserController {
 		
 		String urlParameters = "uname=" + uname + "&password=" + pass;
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/LoginService", urlParameters,
+				"http://se-pro.appspot.com/rest/LoginService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 
 		JSONParser parser = new JSONParser();
@@ -203,7 +203,7 @@ public class UserController {
 		String urlParameters = "";
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/GetFriendRequestsService", urlParameters,
+				"http://se-pro.appspot.com/rest/GetFriendRequestsService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 		
         JSONParser parser = new JSONParser();
@@ -226,7 +226,7 @@ public class UserController {
 		String urlParameters = "";
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/LogoutService", urlParameters,
+				"http://se-pro.appspot.com/rest/LogoutService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 		
         JSONParser parser = new JSONParser();
@@ -249,7 +249,7 @@ public class UserController {
 		String urlParameters = "receiverEmail=" + receiverEmail;
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/SendFriendRequestService", urlParameters,
+				"http://se-pro.appspot.com/rest/SendFriendRequestService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 		
         JSONParser parser = new JSONParser();
@@ -277,7 +277,7 @@ public class UserController {
 		String urlParameters = "friendEmail=" + friendEmail;
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/AcceptFriendRequestService", urlParameters,
+				"http://se-pro.appspot.com/rest/AcceptFriendRequestService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 		
         JSONParser parser = new JSONParser();
