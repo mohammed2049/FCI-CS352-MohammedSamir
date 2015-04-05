@@ -33,7 +33,7 @@ public class GroupController {
 	public String createGroup(@FormParam("name") String name,
 			@FormParam("desc") String desc, @FormParam("privacy") String privacy) {
 
-		String serviceUrl = "http://fci-swe-apps.appspot.com/rest/CreateGroupService";
+		String serviceUrl = "http://se-pro.appspot.com/rest/CreateGroupService";
 		String urlParameters = "user_id=" + User.getCurrentActiveUser().getId()
 				+ "&name=" + name + "&desc=" + desc + "&privacy=" + privacy;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",

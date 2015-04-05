@@ -53,7 +53,7 @@ public class GroupChatController {
 	@POST
 	@Path("/sendGroupChatMessage")
 	public Response sendGroupChatMessage(@FormParam("id") String id, @FormParam("message") String message) {
-		String serviceUrl = "http://localhost:8888/rest/SendGroupChatMessageService";
+		String serviceUrl = "http://se-pro.appspot.com/rest/SendGroupChatMessageService";
 		String urlParameters = "id=" + id + "&message=" + message;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
@@ -82,7 +82,7 @@ public class GroupChatController {
 	@Path("/OpenGroupChat")
 	public Response openGroupChatMessage(@FormParam("id") String id) {
 		GroupChatNotificationModel.deletenotification(UserEntity.currentUser.getEmail(), Integer.parseInt(id));
-		String serviceUrl = "http://localhost:8888/rest/GetGroupChatDataService";
+		String serviceUrl = "http://se-pro.appspot.com/rest/GetGroupChatDataService";
 		String urlParameters = "id=" + id;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
@@ -110,7 +110,7 @@ public class GroupChatController {
 	@POST
 	@Path("/CreateGroupChat")
 	public Response groupChatPage(@FormParam("participants") String participantsEmails, @FormParam("chatName") String chatName) {
-		String serviceUrl = "http://localhost:8888/rest/CreateGroupChatService";
+		String serviceUrl = "http://se-pro.appspot.com/rest/CreateGroupChatService";
 		String urlParameters = "participants=" + participantsEmails + "&chatName=" + chatName;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");

@@ -54,7 +54,7 @@ public class SingleMessageController {
 	@POST
 	@Path("/SendMessage")
 	public Response sendMessage(@FormParam("reciever") String reciever, @FormParam("message") String message) {
-		String serviceUrl = "http://localhost:8888/rest/SendMessageService";
+		String serviceUrl = "http://se-pro.appspot.com/rest/SendMessageService";
 		String urlParameters = "reciever=" + reciever + "&message=" + message;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
@@ -83,7 +83,7 @@ public class SingleMessageController {
 	@Path("/GetMessage")
 	public Response getMessage(@FormParam("reciever") String reciever) {
 		SingleChatNotificationModel.deletenotification(UserEntity.currentUser.getEmail(), reciever);
-		String serviceUrl = "http://localhost:8888/rest/GetMessageService";
+		String serviceUrl = "http://se-pro.appspot.com/rest/GetMessageService";
 		String urlParameters = "reciever=" + reciever;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
