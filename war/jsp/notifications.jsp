@@ -56,7 +56,7 @@ org.json.simple.parser.*"%>
 		String urlParameters = "";
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/GetFriendRequestsService",
+				"http://se-pro.appspot.com/rest/GetFriendRequestsService",
 				urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 
