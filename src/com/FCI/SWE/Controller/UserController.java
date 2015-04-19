@@ -183,6 +183,7 @@ public class UserController {
 			Map<String, String> map = new HashMap<String, String>();
 			
 			map.put("name", uname);
+			map.put("password", pass);
 			return Response.ok(new Viewable("/jsp/home", map)).build();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

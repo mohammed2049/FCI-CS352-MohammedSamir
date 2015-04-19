@@ -37,9 +37,7 @@ public class GroupChatServices {
 
 	@POST
 	@Path("/CreateGroupChatService")
-	public String createGroupChat(
-			@FormParam("participants") String participants,
-			@FormParam("chatName") String chatName) {
+	public String createGroupChat(@FormParam("participants") String participants, @FormParam("chatName") String chatName) {
 		JSONObject object = new JSONObject();
 		if (UserEntity.currentUser == null) {
 			object.put("Status", "Failed");
