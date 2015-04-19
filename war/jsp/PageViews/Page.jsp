@@ -31,5 +31,9 @@ org.json.simple.parser.*"%>
 		<input value="Like" type="submit">
 		<input value="${it.page_name}" name="page_name" type="hidden">
 	</form>
+	<form method="POST" action="/social/PageLikes" >
+		<input value="Who Likes" type="submit">
+		<input value="${it.page_name}" name="page_name" type="hidden">
+	</form>
 </body>
 </html>

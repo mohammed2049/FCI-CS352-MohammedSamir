@@ -6,3 +6,4 @@ gaeHrdEnabled=true
 gaeLaunchAppInBrowser=false
 googleCloudSqlEnabled=false
 localDevMySqlEnabled=true
+validationExclusions=src/com/FCI/SWE/Controller/PageController.java

@@ -10,17 +10,18 @@ import org.json.simple.parser.ParseException;
 import com.google.appengine.api.datastore.*;
 
 public class PageModel {
-	public static String savePage(String owner, String page_name) {
+	public static boolean savePage(String owner, String page_name) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
-		Key key=getKey(page_name);
+		
 		if (getKey(page_name) != null)
-			return key.toString();
+			return false;
+		
 		Entity employee = new Entity("Pages");
 		employee.setProperty("page_name", page_name);
 		employee.setProperty("owner", owner);
 		datastore.put(employee);
-		return getKey(page_name).toString();
+		return true;
 	}
 	public static boolean deletePage(String page_name) {
 		Key k = getKey(page_name);
