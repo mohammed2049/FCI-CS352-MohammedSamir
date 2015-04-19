@@ -76,6 +76,9 @@ public class UserController {
 		}
 	 return Response.ok(new Viewable("/jsp/youMustBeLoggedIn")).build();
 	}
+	
+	
+	
 	@GET
 	@Path("/search")
 	public Response search(){

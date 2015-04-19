@@ -20,9 +20,7 @@ public class GroupChatNotificationModel {
 		datastore.put(employee);
 		return true;
 	}
-
 	public static List<Integer> groupchatids(String useremail) {
-
 		List<Integer> ne = new ArrayList<Integer>();
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -35,12 +33,10 @@ public class GroupChatNotificationModel {
 						.getProperty("groupchatid").toString());
 				if (!ne.contains(res))
 					ne.add(res);
-				System.out.print(res);
 			}
 		}
 		return ne;
 	}
-
 	public static boolean deletenotificationkey(Key k){
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -64,7 +60,6 @@ public class GroupChatNotificationModel {
 		
 		return true;
 	}
-
 	public static List<Key> getkey(String email, Integer id) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();

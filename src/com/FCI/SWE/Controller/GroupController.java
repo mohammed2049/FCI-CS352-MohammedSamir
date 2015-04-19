@@ -21,10 +21,9 @@ public class GroupController {
 	@GET
 	@Path("/group")
 	public Response group() {
-
-		if (User.getCurrentActiveUser() == null) {
+		if (User.getCurrentActiveUser() == null)
 			return Response.serverError().build();
-		}
+
 		return Response.ok(new Viewable("/jsp/GroupViews/createGroup")).build();
 	}
 

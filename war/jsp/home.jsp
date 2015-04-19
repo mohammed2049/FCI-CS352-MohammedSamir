@@ -36,6 +36,7 @@ org.json.simple.parser.*"%>
 	<a href="/social/LogOut/">Log out</a>
 	<br>
 	<a href="/social/notifications">My Notifications</a>
+	<a href="/social/createPage">Create Page</a>
 	<br>
   	<form action="/social/SendMessagePage" method="get">
   		<input type="submit" value="Send Message">
