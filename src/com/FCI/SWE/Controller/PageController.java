@@ -67,6 +67,7 @@ public class PageController {
 			return Response.ok(new Viewable("/jsp/youMustBeLoggedIn")).build();
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("page_name", page_name);
+		map.put("user_email", UserEntity.currentUser.getEmail());
 		return Response.ok(new Viewable("/jsp/PageViews/Page", map)).build();
 	}
 	
@@ -77,6 +78,7 @@ public class PageController {
 		PageLike.saveLike(UserEntity.currentUser.getEmail(), page_name);
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("page_name", page_name);
+		map.put("user_email", UserEntity.currentUser.getEmail());
 		return Response.ok(new Viewable("/jsp/PageViews/Page", map)).build();
 	}
 	@POST

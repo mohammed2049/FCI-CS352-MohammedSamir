@@ -35,5 +35,14 @@ org.json.simple.parser.*"%>
 		<input value="Who Likes" type="submit">
 		<input value="${it.page_name}" name="page_name" type="hidden">
 	</form>
+	
+	
+	<form action="/social/CreatePost" method="post">
+		<input type = "hidden" name = "owner" value = "${it.user_email}" >
+		Content: <textarea rows = "6" cols = "50" name = "content"></textarea> <br>
+		<input type = "hidden" name = "timelineid" value = "${it.page_name}" >
+		Post Privacy: <input type="text" name="privacy" /> <br>
+  		<input type="submit" value="Create Post">
+  	</form>
 </body>
 </html>

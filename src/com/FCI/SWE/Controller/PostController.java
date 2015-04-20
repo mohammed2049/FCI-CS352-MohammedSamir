@@ -59,6 +59,7 @@ public class PostController {
 	public Response createPost(@FormParam("owner") String owner, @FormParam("content") String content, @FormParam("timelineid") String timelineid, @FormParam("privacy") String privacy) {
 		String serviceUrl = "http://localhost:8888/rest/CreatePostService";
 		String urlParameters = "owner=" + owner + "&content=" + content + "&timelineid=" + timelineid + "&privacy=" + privacy;
+		System.out.print(urlParameters);
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 		JSONParser parser = new JSONParser();
