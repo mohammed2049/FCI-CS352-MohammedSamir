@@ -28,7 +28,7 @@ org.json.simple.parser.*"%>
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
 		
 		JSONParser parser = new JSONParser();
-		Object obj = parser.parse(retJson.toString());
+		Object obj = parser.parse(retJson);
 		JSONObject jsonObj = (JSONObject) obj;
 		
 		int Size = Integer.parseInt(jsonObj.get("Size").toString());
@@ -61,7 +61,9 @@ org.json.simple.parser.*"%>
   	<form action="/social/GroupChatData" method="get">
   		<input type="submit" value="Start Group Chat">
   	</form>
-  	
+  	<form action="/social/HashTagPage" method="get">
+  		<input type="submit" value="HashTag Search">
+  	</form>
   	<a href="/social/LogOut/">Log out</a> <br>
 </body>
 </html>
