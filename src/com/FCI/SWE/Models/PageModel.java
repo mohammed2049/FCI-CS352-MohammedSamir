@@ -10,6 +10,17 @@ import org.json.simple.parser.ParseException;
 import com.google.appengine.api.datastore.*;
 
 public class PageModel {
+	public static List<String> getPages(String user_email){
+		List<String> pages=new ArrayList<String>();
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Query gaeQuery = new Query("Pages");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		for (Entity entity : pq.asIterable())
+			if (entity.getProperty("owner").toString().equals(user_email))
+				pages.add(entity.getProperty("page_name").toString());
+		return pages;
+	}
 	public static boolean savePage(String owner, String page_name) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();

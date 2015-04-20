@@ -34,6 +34,7 @@ org.json.simple.parser.*"%>
 		<input type="submit" value="Start Group Chat">
 	</form>
 	<a href="/social/LogOut/">Log out</a>
+	<a href="/social/myPages"> my pages</a>
 	<br>
 	<a href="/social/notifications">My Notifications</a>
 	<a href="/social/createPage">Create Page</a>

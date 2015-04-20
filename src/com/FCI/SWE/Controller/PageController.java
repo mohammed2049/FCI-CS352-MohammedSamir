@@ -50,6 +50,27 @@ public class PageController {
 		map.put("page_name", name);
 		return Response.ok(new Viewable("/jsp/PageViews/Page", map)).build();
 	}
+	
+	@GET
+	@Path("/myPages")
+	public Response myPages() {
+		if (UserEntity.currentUser == null) 
+			return Response.ok(new Viewable("/jsp/youMustBeLoggedIn")).build();
+		
+		return Response.ok(new Viewable("/jsp/PageViews/myPages")).build();
+	}
+	
+	@POST
+	@Path("/page")
+	public Response page(@FormParam("page_name") String page_name) {
+		if (UserEntity.currentUser == null) 
+			return Response.ok(new Viewable("/jsp/youMustBeLoggedIn")).build();
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("page_name", page_name);
+		return Response.ok(new Viewable("/jsp/PageViews/Page", map)).build();
+	}
+	
+	
 	@POST
 	@Path("/LikePage")
 	public Response LikePage(@FormParam("page_name") String page_name){
