@@ -26,6 +26,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.FCI.SWE.ServicesModels.TimeLineEntity;
 import com.FCI.SWE.ServicesModels.UserEntity;
 import com.google.appengine.api.datastore.Key;
 
@@ -36,16 +37,13 @@ import com.google.appengine.api.datastore.Key;
  * @author Mohamed Samir
  * @version 1.0
  * @since 2014-02-12
- *
+ * 
  */
 @Path("/")
 @Produces(MediaType.TEXT_PLAIN)
 public class UserServices {
-	
-	
-	
 
-		/**
+	/**
 	 * Registration Rest service, this service will be called to make
 	 * registration. This function will store user data in data store
 	 * 
@@ -62,7 +60,10 @@ public class UserServices {
 	public String registrationService(@FormParam("uname") String uname,
 			@FormParam("email") String email, @FormParam("password") String pass) {
 		UserEntity user = new UserEntity(uname, email, pass);
+
 		user.saveUser();
+		TimeLineEntity timeLine = new TimeLineEntity(user.getId());
+		timeLine.saveTimeLine();
 		JSONObject object = new JSONObject();
 		object.put("Status", "OK");
 		return object.toString();
@@ -71,8 +72,11 @@ public class UserServices {
 	/**
 	 * Login Rest Service, this service will be called to make login process
 	 * also will check user data and returns new user from datastore
-	 * @param uname provided user name
-	 * @param pass provided user password
+	 * 
+	 * @param uname
+	 *            provided user name
+	 * @param pass
+	 *            provided user password
 	 * @return user in json format
 	 */
 	@POST
@@ -95,7 +99,7 @@ public class UserServices {
 		return object.toString();
 
 	}
-	
+
 	@POST
 	@Path("/LogoutService")
 	public String logoutService() {
@@ -110,10 +114,11 @@ public class UserServices {
 		}
 		return object.toString();
 	}
-	
+
 	@POST
 	@Path("/SendFriendRequestService")
-	public String sendFriendRequest(@FormParam("receiverEmail") String receiverEmail) {
+	public String sendFriendRequest(
+			@FormParam("receiverEmail") String receiverEmail) {
 		JSONObject object = new JSONObject();
 		UserEntity user = UserEntity.currentUser;
 		if (user == null) {
@@ -125,7 +130,7 @@ public class UserServices {
 		}
 		return object.toString();
 	}
-	
+
 	@POST
 	@Path("/GetFriendRequestsService")
 	public String getFriendRequest() {
@@ -137,18 +142,19 @@ public class UserServices {
 		} else {
 			object.put("Status", "OK");
 			List<String> requests = user.getFriendRequests();
-			
-			object.put("Size",requests.size());
+
+			object.put("Size", requests.size());
 			for (int i = 0; i < requests.size(); ++i) {
 				object.put("friend" + i, requests.get(i));
 			}
 		}
 		return object.toString();
 	}
-		
+
 	@POST
 	@Path("/AcceptFriendRequestService")
-	public String acceptFriendRequest(@FormParam("friendEmail") String friendEmail) {
+	public String acceptFriendRequest(
+			@FormParam("friendEmail") String friendEmail) {
 		JSONObject object = new JSONObject();
 		UserEntity user = UserEntity.currentUser;
 		if (user == null) {
@@ -158,9 +164,9 @@ public class UserServices {
 			object.put("Status", "OK");
 			Key k;
 			k = user.saveFriends(friendEmail);
-			
+
 			user.deleteRecord(k);
-			
+
 			if (k == null)
 				object.put("state", "No Friend Request Exist with this email.");
 			else
