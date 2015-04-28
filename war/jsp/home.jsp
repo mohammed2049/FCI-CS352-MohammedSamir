@@ -42,6 +42,13 @@ org.json.simple.parser.*"%>
   	<form action="/social/SendMessagePage" method="get">
   		<input type="submit" value="Send Message">
   	</form>
+  	<form action="/social/GroupChatData" method="get">
+  		<input type="submit" value="Start Group Chat">
+  	</form>
+  	<form action="/social/HashTagPage" method="get">
+  		<input type="submit" value="HashTag Search">
+  	</form>
+  	<a href="/social/LogOut/">Log out</a> <br>
 
 </body>
 </html>
