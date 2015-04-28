@@ -24,7 +24,7 @@ import com.google.appengine.api.datastore.Transaction;
  * <p>
  * This class will act as a model for user, it will holds user data
  * </p>
- *
+ * 
  * @author Mohamed Samir
  * @version 1.0
  * @since 2014-02-12
@@ -51,12 +51,12 @@ public class UserEntity {
 		this.email = email;
 		this.password = password;
 	}
-	
-	private void setId(long id){
+
+	private void setId(long id) {
 		this.id = id;
 	}
-	
-	public long getId(){
+
+	public long getId() {
 		return id;
 	}
 
@@ -72,7 +72,6 @@ public class UserEntity {
 		return password;
 	}
 
-	
 	/**
 	 * 
 	 * This static method will form UserEntity class using user name and
@@ -117,56 +116,58 @@ public class UserEntity {
 		Query gaeQuery = new Query("users");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
-		
-		try {
-		Entity employee = new Entity("users", list.size() + 2);
 
-		employee.setProperty("name", this.name);
-		employee.setProperty("email", this.email);
-		employee.setProperty("password", this.password);
-		
-		datastore.put(employee);
-		txn.commit();
-		}finally{
+		try {
+			id = list.size() + 2;
+			Entity employee = new Entity("users", id);
+
+			employee.setProperty("name", this.name);
+			employee.setProperty("email", this.email);
+			employee.setProperty("password", this.password);
+
+			datastore.put(employee);
+			txn.commit();
+		} finally {
 			if (txn.isActive()) {
-		        txn.rollback();
-		    }
+				txn.rollback();
+			}
 		}
 		return true;
 
 	}
-	
+
 	public Boolean saveFriendRequest(String receiverEmail) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
-		
-		try {
-		Entity employee = new Entity("friendrequest");
 
-		employee.setProperty("senderEmail", this.email);
-		employee.setProperty("receiverEmail", receiverEmail);
-		
-		datastore.put(employee);
-		txn.commit();
-		}finally{
+		try {
+			Entity employee = new Entity("friendrequest");
+
+			employee.setProperty("senderEmail", this.email);
+			employee.setProperty("receiverEmail", receiverEmail);
+
+			datastore.put(employee);
+			txn.commit();
+		} finally {
 			if (txn.isActive()) {
-		        txn.rollback();
-		    }
+				txn.rollback();
+			}
 		}
 		return true;
 
 	}
-	
+
 	public List<String> getFriendRequests() {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 
 		Query gaeQuery = new Query("friendrequest");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
-		List<String> emails = new ArrayList<String> ();
+		List<String> emails = new ArrayList<String>();
 		for (Entity entity : pq.asIterable()) {
-			if (entity.getProperty("receiverEmail").toString().equals(this.email)) {
+			if (entity.getProperty("receiverEmail").toString()
+					.equals(this.email)) {
 				emails.add(entity.getProperty("senderEmail").toString());
 			}
 		}
@@ -178,37 +179,35 @@ public class UserEntity {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
-		
-		
+
 		boolean good = false;
-		
-		
+
 		Query gaeQuery = new Query("friendrequest");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		Key k = null;
 		for (Entity entity : pq.asIterable()) {
-			if (entity.getProperty("senderEmail").toString().equals(friendEmail)) {
+			if (entity.getProperty("senderEmail").toString()
+					.equals(friendEmail)) {
 				k = entity.getKey();
 				good = true;
 			}
 		}
-		
-		
-		
-		if (good == false) return k;
-		
-		try {
-		Entity employee = new Entity("friends");
 
-		employee.setProperty("friend1", friendEmail);
-		employee.setProperty("friend2", this.email);
-		
-		datastore.put(employee);
-		txn.commit();
-		}finally{
+		if (good == false)
+			return k;
+
+		try {
+			Entity employee = new Entity("friends");
+
+			employee.setProperty("friend1", friendEmail);
+			employee.setProperty("friend2", this.email);
+
+			datastore.put(employee);
+			txn.commit();
+		} finally {
 			if (txn.isActive()) {
-		        txn.rollback();
-		    }
+				txn.rollback();
+			}
 		}
 		return k;
 	}
@@ -217,15 +216,15 @@ public class UserEntity {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
-		
+
 		try {
-		
-		datastore.delete(k);
-		txn.commit();
-		}finally{
+
+			datastore.delete(k);
+			txn.commit();
+		} finally {
 			if (txn.isActive()) {
-		        txn.rollback();
-		    }
+				txn.rollback();
+			}
 		}
 	}
 }
