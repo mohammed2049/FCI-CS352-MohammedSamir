@@ -60,4 +60,20 @@ public class TimeLineEntity {
 		}
 		return true;
 	}
+
+	public long getTimeLineID(long uid) {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		long res = 0;
+		Query gaeQuery = new Query("TimeLine");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		for (Entity entity : pq.asIterable()) {
+			if (entity.getProperty("userID").toString()
+					.equals(new Long(uid).toString())) {
+
+				res = entity.getKey().getId();
+			}
+		}
+		return res;
+	}
 }
