@@ -187,6 +187,8 @@ public class UserController {
 			
 			map.put("name", uname);
 			map.put("password", pass);
+//			long usrid = UserEntity.currentUser.getId();
+//			map.put("id" , new Long(usrid).toString());
 			return Response.ok(new Viewable("/jsp/home", map)).build();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

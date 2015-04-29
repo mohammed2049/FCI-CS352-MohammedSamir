@@ -162,7 +162,7 @@ public class HashTagEntity {
 				PostEntity postEntity = new PostEntity();
 				postEntity.getPost(Long.parseLong(PostId));
 				ret += "<br>" + postEntity.getOwner() + "<br>" + 
-			       "___________________________________________" + "<br>" +
+			       "___________________________________________" + "<br>"
 			       + postEntity.getContent() + "<br>" +
 			       "___________________________________________" + "<br>" +
 			       "Likes " + postEntity.getNumberOfLikes() + "<br>" + 

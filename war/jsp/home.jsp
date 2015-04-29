@@ -21,6 +21,27 @@ org.json.simple.parser.*"%>
 </head>
 
 <body>
+	<%
+		long usrid = UserEntity.currentUser.getId();
+		long timeLineID = TimeLineEntity.getTimeLineID(usrid);
+		
+		String urlParameters = "timelineid=" + new Long(timeLineID).toString();
+
+		String retJson = Connection.connect(
+				"http://localhost:8888/rest/GetTimeLinePosts",
+				urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	%>
 	<p>
 		Friend Request Report: <br>
 	
