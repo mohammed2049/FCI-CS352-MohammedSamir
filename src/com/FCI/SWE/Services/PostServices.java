@@ -28,6 +28,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.FCI.SWE.ServicesModels.GroupChatEntity;
+import com.FCI.SWE.ServicesModels.HashTagEntity;
 import com.FCI.SWE.ServicesModels.PostEntity;
 import com.FCI.SWE.ServicesModels.UserEntity;
 import com.google.appengine.api.datastore.Key;
@@ -41,13 +42,14 @@ public class PostServices {
 		JSONObject object = new JSONObject();
 		PostEntity postEntity = new PostEntity(owner, content, timelineid, privacy);
 		postEntity.savePost();
-		/*
+	
 		List<String> hashtag = postEntity.getHashTags();
+		System.out.println("yes");
 		for (int i = 0; i < hashtag.size(); ++i) {
-			HashTagEntity obj = new HashTagEntity(id, hashtag.get(i));
-			obj.saveHashTag();
+			System.out.println("yes");
+			HashTagEntity obj = new HashTagEntity(postEntity.getId() , hashtag.get(i));
 		}
-		*/
+	
 		object.put("Status", "Ok");
 		object.put("owner", owner);
 		object.put("content", content);

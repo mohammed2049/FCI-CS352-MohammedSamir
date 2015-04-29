@@ -41,17 +41,16 @@ public class HashTagServices {
 	@Path("/GetHashTagService")
 	public String GetHashTagData(@FormParam("id") String id) {
 		JSONObject ret = new JSONObject();
-		
+		System.out.println(id);
 		if (UserEntity.currentUser == null) {
 			ret.put("Status", "Failed");
 			return ret.toString();
 		}
 
 		HashTagEntity hashtag = new HashTagEntity(id);
-		hashtag.getHashTag();
 		
 		ret.put("Status", "Ok");
-		ret.put("posts" , hashtag.printPosts());
+		ret.put("posts" , hashtag.getHashTag());
 		return ret.toString();
 	}
 	

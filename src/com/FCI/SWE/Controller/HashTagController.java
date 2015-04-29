@@ -51,10 +51,11 @@ public class HashTagController {
 	}
 	
 	@POST
-	@Path("/GetHashTagPosts")
+	@Path("/GetHashTag")
 	public Response gethashtag(@FormParam("name") String name) {
+		System.out.println(name);
 		String serviceUrl = "http://localhost:8888/rest/GetHashTagService";
-		String urlParameters = "HashTag=" + name;
+		String urlParameters = "id=" + name;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
 		JSONParser parser = new JSONParser();
@@ -70,7 +71,7 @@ public class HashTagController {
 
 			map.put("name", object.get("name").toString());
 			map.put("posts", object.get("posts").toString());
-			
+			System.out.println(object.get("posts").toString());
 			return Response.ok(new Viewable("/jsp/hashtag", map)).build();
 		} catch (ParseException e) {
 			e.printStackTrace();

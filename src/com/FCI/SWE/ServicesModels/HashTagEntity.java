@@ -41,32 +41,20 @@ import com.google.appengine.api.datastore.Transaction;
 
 
 public class HashTagEntity {
-	private long id;
+
 	private String name;
-	private String postId;
+	private long postId;
+	
 	
 	public HashTagEntity(String id) {
-		// TODO Auto-generated constructor stub
-		this.id = Integer.parseInt(id);
-		this.name = "";
-		this.postId = "";
+		this.name = id;
+		this.postId = -1;
 	}
+	
 	public HashTagEntity(long postId , String name) {
 		// TODO Auto-generated constructor stub
 		this.name = name;
-		this.postId = Long.toString(postId) + " ";
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		Query gaeQuery = new Query("hashtag");
-		PreparedQuery pq = datastore.prepare(gaeQuery);
-		for (Entity entity : pq.asIterable()) {
-			if (entity.getProperty("name").toString().equals(name)) {
-				this.id = entity.getKey().getId();
-				getHashTag();
-				updateHashTag(postId);
-				return;
-			}
-		}
+		this.postId = postId;
 		saveHashTag();
 	}
 	
@@ -81,13 +69,13 @@ public class HashTagEntity {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
-		
+		System.out.println("Yes");
 		Query gaeQuery = new Query("hashtag");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
 		
 		try {
-			id = list.size() + 2;
+			long id = list.size() + 2;
 			Entity hashtag = new Entity("hashtag", id);
 			
 			hashtag.setProperty("name", name);
@@ -104,73 +92,50 @@ public class HashTagEntity {
 		return true;
 	}
 	
-	public boolean getHashTag() {
+	public String getHashTag() {
+		System.out.println("kdjkf");
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
-		
-		try {
-			Key key = KeyFactory.createKey("hashtag", id);
-			try {
-				Entity entity = datastore.get(key);
-				name = entity.getProperty("name").toString();
-				postId = entity.getProperty("postId").toString();
-				
-			} catch (EntityNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		String ret = "";
+			Query gaeQuery = new Query("hashtag");
+			PreparedQuery pq = datastore.prepare(gaeQuery);
+			List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+			
+
+			for (Entity entity : pq.asIterable()) {
+				if (entity.getProperty("name").equals(name)){
+								
+					name = entity.getProperty("name").toString();
+					String aa = entity.getProperty("postId").toString();
+					postId = 0;
+					System.out.println(postId);
+					for(int i = 0 ; i < aa.length() ; i++){
+						postId *= 10;
+						postId += aa.charAt(i);
+					}
+					System.out.println(postId);
+					ret += printPosts();
+				}
 			}
-			txn.commit();
-		}finally{
-			if (txn.isActive()) {
-		        txn.rollback();
-		    }
-		}
-		return true;
+				System.out.println(name + "   " + postId);
+				
+		
+		return ret;
 	}
 
-	public boolean updateHashTag(long PostId) {
-		if(postId.indexOf(Long.toString(PostId)) == -1)
-			postId += Long.toString(PostId) + " ";
-		
-		DatastoreService datastore = DatastoreServiceFactory
-				.getDatastoreService();
-		Transaction txn = datastore.beginTransaction();
-		
-		try {
-			Entity hashtag = new Entity("hashtag", id);
-			
-			hashtag.setProperty("name", name);
-			hashtag.setProperty("postId", postId);
-			
-			
-			datastore.put(hashtag);
-			txn.commit();
-		}finally{
-			if (txn.isActive()) {
-		        txn.rollback();
-		    }
-		}
-		return true;
-	}
 	
 	public String printPosts(){
+		System.out.println(postId);
 		String ret = "";
-		String PostId = "" , ID = postId;
-		for(int i = 0; i < ID.length() ; i++){
-			if(ID.charAt(i) == ' '){
 				PostEntity postEntity = new PostEntity();
-				postEntity.getPost(Long.parseLong(PostId));
+				postEntity.getPost(this.postId);
 				ret += "<br>" + postEntity.getOwner() + "<br>" + 
 			       "___________________________________________" + "<br>"
 			       + postEntity.getContent() + "<br>" +
 			       "___________________________________________" + "<br>" +
 			       "Likes " + postEntity.getNumberOfLikes() + "<br>" + 
 			       "___________________________________________" + "<br>";
-				PostId = "";
-			}
-			else PostId += ID.charAt(i);
-		}
 		return ret;
 	}
 	
