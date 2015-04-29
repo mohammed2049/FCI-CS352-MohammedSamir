@@ -61,7 +61,7 @@ public class TimeLineEntity {
 		return true;
 	}
 
-	public long getTimeLineID(long uid) {
+	public static long getTimeLineID(long uid) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		long res = 0;

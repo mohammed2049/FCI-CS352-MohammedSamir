@@ -59,7 +59,7 @@ org.json.simple.parser.*"%>
 				"http://localhost:8888/rest/GetFriendRequestsService",
 				urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
-
+		
 		JSONParser parser = new JSONParser();
 		Object obj;
 		try {

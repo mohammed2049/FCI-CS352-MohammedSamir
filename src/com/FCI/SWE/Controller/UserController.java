@@ -31,6 +31,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import com.FCI.SWE.Models.User;
+import com.FCI.SWE.ServicesModels.TimeLineEntity;
 import com.FCI.SWE.ServicesModels.UserEntity;
 
 /**
@@ -53,15 +54,16 @@ public class UserController {
 	 */
 	@POST
 	@Path("/doSearch")
-	public Response usersList(@FormParam("uname") String uname){
+	public Response usersList(@FormParam("uname") String uname) {
 		System.out.println(uname);
 		String serviceUrl = "http://localhost/rest/SearchService";
 		String urlParameters = "uname=" + uname;
 		String retJson = Connection.connect(serviceUrl, urlParameters, "POST",
 				"application/x-www-form-urlencoded;charset=UTF-8");
-		
+
 		return null;
 	}
+
 	@GET
 	@Path("/signup")
 	public Response signUp() {
@@ -74,16 +76,15 @@ public class UserController {
 		if (UserEntity.currentUser != null) {
 			return Response.ok(new Viewable("/jsp/notifications")).build();
 		}
-	 return Response.ok(new Viewable("/jsp/youMustBeLoggedIn")).build();
+		return Response.ok(new Viewable("/jsp/youMustBeLoggedIn")).build();
 	}
-	
-	
-	
+
 	@GET
 	@Path("/search")
-	public Response search(){
+	public Response search() {
 		return Response.ok(new Viewable("/jsp/search")).build();
 	}
+
 	/**
 	 * Action function to render home page of application, home page contains
 	 * only signup and login buttons
@@ -166,10 +167,10 @@ public class UserController {
 	 */
 	@POST
 	@Path("/home")
-//	@Produces("text/html")
+	// @Produces("text/html")
 	public Response home(@FormParam("uname") String uname,
 			@FormParam("password") String pass) {
-		
+
 		String urlParameters = "uname=" + uname + "&password=" + pass;
 		String retJson = Connection.connect(
 				"http://localhost:8888/rest/LoginService", urlParameters,
@@ -182,13 +183,18 @@ public class UserController {
 			JSONObject object = (JSONObject) obj;
 			if (object.get("Status").equals("Failed"))
 				return null;
-			
+
 			Map<String, String> map = new HashMap<String, String>();
-			
+			if (UserEntity.currentUser == null)
+				return Response.ok(new Viewable("/jsp/youMustBeLoggedIn")).build();
+
 			map.put("name", uname);
 			map.put("password", pass);
-//			long usrid = UserEntity.currentUser.getId();
-//			map.put("id" , new Long(usrid).toString());
+			long usrid = UserEntity.currentUser.getId();
+			long timelineID = TimeLineEntity.getTimeLineID(usrid);
+			map.put("timelineid", new Long(timelineID).toString());
+			// long usrid = UserEntity.currentUser.getId();
+			// map.put("id" , new Long(usrid).toString());
 			return Response.ok(new Viewable("/jsp/home", map)).build();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -202,108 +208,110 @@ public class UserController {
 		return null;
 
 	}
-	
+
 	@POST
 	@Path("/GetRequests")
-    public String getRequests() {
+	public String getRequests() {
 		String urlParameters = "";
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/GetFriendRequestsService", urlParameters,
-				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
-		
-        JSONParser parser = new JSONParser();
-        Object obj;
-        try {
-        	obj = parser.parse(retJson);
-            JSONObject object = (JSONObject) obj;
-            
-            if (object.get("Status").equals("OK"))
-            	return object.toString();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-	
+				"http://localhost:8888/rest/GetFriendRequestsService",
+				urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			if (object.get("Status").equals("OK"))
+				return object.toString();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	@GET
 	@Path("/LogOut")
-    public Response logOut() {
+	public Response logOut() {
 		String urlParameters = "";
 
 		String retJson = Connection.connect(
 				"http://localhost:8888/rest/LogoutService", urlParameters,
 				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
-		
-        JSONParser parser = new JSONParser();
-        Object obj;
-        try {
-        	obj = parser.parse(retJson);
-            JSONObject object = (JSONObject) obj;
-            
-            if (object.get("Status").equals("OK"))
-            	return Response.ok(new Viewable("/jsp/entryPoint")).build();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-	
+
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			if (object.get("Status").equals("OK"))
+				return Response.ok(new Viewable("/jsp/entryPoint")).build();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	@POST
 	@Path("/SendRequest")
-    public Response SendRequest(@FormParam("receiverEmail") String receiverEmail) {
+	public Response SendRequest(@FormParam("receiverEmail") String receiverEmail) {
 		String urlParameters = "receiverEmail=" + receiverEmail;
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/SendFriendRequestService", urlParameters,
-				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
-		
-        JSONParser parser = new JSONParser();
-        Object obj;
-        try {
-        	obj = parser.parse(retJson);
+				"http://localhost:8888/rest/SendFriendRequestService",
+				urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 			if (object.get("Status").equals("Failed"))
 				return null;
-			
+
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("name", UserEntity.currentUser.getName());
 			map.put("email", UserEntity.currentUser.getEmail());
 			return Response.ok(new Viewable("/jsp/home", map)).build();
-            
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-	
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	@POST
 	@Path("/AcceptRequest")
-    public Response AcceptRequest(@FormParam("friendEmail") String friendEmail) {
+	public Response AcceptRequest(@FormParam("friendEmail") String friendEmail) {
 		String urlParameters = "friendEmail=" + friendEmail;
 
 		String retJson = Connection.connect(
-				"http://localhost:8888/rest/AcceptFriendRequestService", urlParameters,
-				"POST", "application/x-www-form-urlencoded;charset=UTF-8");
-		
-        JSONParser parser = new JSONParser();
-        Object obj;
-        try {
-        	obj = parser.parse(retJson);
+				"http://localhost:8888/rest/AcceptFriendRequestService",
+				urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
 			if (object.get("Status").equals("Failed"))
 				return null;
-			
-			
+
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("name", UserEntity.currentUser.getName());
 			map.put("email", UserEntity.currentUser.getEmail());
 			return Response.ok(new Viewable("/jsp/home", map)).build();
-            
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }
