@@ -13,6 +13,7 @@ import com.google.appengine.api.datastore.Transaction;
 public class TimeLineEntity {
 	private long id;
 	private long userID;
+	private String pageID;
 
 	public TimeLineEntity() {
 		userID = UserEntity.currentUser.getId();
@@ -22,8 +23,16 @@ public class TimeLineEntity {
 		this.userID = userID;
 	}
 
+	public TimeLineEntity(String pageID) {
+		this.pageID = pageID;
+	}
+
 	public long getId() {
 		return id;
+	}
+
+	public String getPageID() {
+		return pageID;
 	}
 
 	public void setId(long id) {
@@ -61,6 +70,29 @@ public class TimeLineEntity {
 		return true;
 	}
 
+	public boolean saveTimeLinePage() {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		Transaction txn = datastore.beginTransaction();
+
+		Query gaeQuery = new Query("TimeLinePage");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+		try {
+			id = list.size() + 2;
+			Entity timeLine = new Entity("TimeLinePage", id);
+
+			timeLine.setProperty("pageID", pageID);
+			datastore.put(timeLine);
+			txn.commit();
+		} finally {
+			if (txn.isActive()) {
+				txn.rollback();
+			}
+		}
+		return true;
+	}
+
 	public static long getTimeLineID(long uid) {
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
@@ -70,6 +102,21 @@ public class TimeLineEntity {
 		for (Entity entity : pq.asIterable()) {
 			if (entity.getProperty("userID").toString()
 					.equals(new Long(uid).toString())) {
+
+				res = entity.getKey().getId();
+			}
+		}
+		return res;
+	}
+
+	public static long getTimeLinePageID(String pageName) {
+		DatastoreService datastore = DatastoreServiceFactory
+				.getDatastoreService();
+		long res = 0;
+		Query gaeQuery = new Query("TimeLinePage");
+		PreparedQuery pq = datastore.prepare(gaeQuery);
+		for (Entity entity : pq.asIterable()) {
+			if (entity.getProperty("pageID").toString().equals(pageName)) {
 
 				res = entity.getKey().getId();
 			}

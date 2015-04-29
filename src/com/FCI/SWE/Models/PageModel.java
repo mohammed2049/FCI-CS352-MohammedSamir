@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.FCI.SWE.ServicesModels.TimeLineEntity;
 import com.google.appengine.api.datastore.*;
 
 public class PageModel {
@@ -22,6 +23,8 @@ public class PageModel {
 		return pages;
 	}
 	public static boolean savePage(String owner, String page_name) {
+		TimeLineEntity Tobj = new TimeLineEntity(page_name);
+		Tobj.saveTimeLinePage();
 		DatastoreService datastore = DatastoreServiceFactory
 				.getDatastoreService();
 		
