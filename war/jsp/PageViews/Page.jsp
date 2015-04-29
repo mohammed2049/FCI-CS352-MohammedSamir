@@ -1,3 +1,5 @@
+<%@page import="com.FCI.SWE.Models.PageModel"%>
+<%@page import="com.FCI.SWE.ServicesModels.TimeLineEntity"%>
 <%@page import="com.FCI.SWE.Services.SingleChatNotification"%>
 <%@page import="com.FCI.SWE.ServicesModels.UserEntity"%>
 <%@page import="com.FCI.SWE.Services.GroupChatNotification"%>
@@ -26,6 +28,16 @@ org.json.simple.parser.*"%>
 </head>
 <body>
 	PageName: ${it.page_name}
+	
+	<form action="/social/CreatePost" method="post">
+		<input type="hidden" name="owner" value="${it.name}">
+		Content:
+		<textarea rows="6" cols="50" name="content"></textarea>
+		<br> <input type="hidden" name="timelineid"
+			value="${it.time_line_id}"> Post Privacy: <input type="text"
+			name="privacy" /> <br> <input type="submit" value="Create Post">
+	</form>
+	
 	<br/>
 	<form method="POST" action="/social/LikePage" >
 		<input value="Like" type="submit">
@@ -35,14 +47,37 @@ org.json.simple.parser.*"%>
 		<input value="Who Likes" type="submit">
 		<input value="${it.page_name}" name="page_name" type="hidden">
 	</form>
+	<%
+		
+		long timeLineID = TimeLineEntity.getTimeLinePageID(PageModel.curr_page);
+
+		String urlParameters = "timelineid="
+				+ new Long(timeLineID).toString();
+		String retJson = Connection.connect(
+				"http://localhost:8888/rest/GetTimelinePostsService",
+				urlParameters, "POST",
+				"application/x-www-form-urlencoded;charset=UTF-8");
+		JSONParser parser = new JSONParser();
+		Object obj;
+		try {
+			obj = parser.parse(retJson);
+			JSONObject object = (JSONObject) obj;
+
+			if (object.get("Status").equals("Ok")) {
+				Integer size = Integer.parseInt(object.get("Size")
+						.toString());
+				for (Integer i = 0; i < size; ++i) {
+					String S = String.format(
+							"<p>POST:%s</p><br/><p>LIKES:%s</p>",
+							object.get("content" + i.toString()),
+							object.get("numberoflikes" + i.toString()));
+					out.print(S);
+				}
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	%>
 	
-	
-	<form action="/social/CreatePost" method="post">
-		<input type = "hidden" name = "owner" value = "${it.user_email}" >
-		Content: <textarea rows = "6" cols = "50" name = "content"></textarea> <br>
-		<input type = "hidden" name = "timelineid" value = "${it.page_name}" >
-		Post Privacy: <input type="text" name="privacy" /> <br>
-  		<input type="submit" value="Create Post">
-  	</form>
 </body>
 </html>

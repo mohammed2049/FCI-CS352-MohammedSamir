@@ -1,16 +1,10 @@
 package com.FCI.SWE.Controller;
 
 import java.io.*;
-
 import java.net.*;
-
 import java.util.*;
 
 import javax.ws.rs.*;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.mvc.Viewable;
@@ -22,6 +16,7 @@ import com.FCI.SWE.Models.PageLike;
 import com.FCI.SWE.Models.PageModel;
 import com.FCI.SWE.Models.SingleChatNotificationModel;
 import com.FCI.SWE.Models.User;
+import com.FCI.SWE.ServicesModels.TimeLineEntity;
 import com.FCI.SWE.ServicesModels.UserEntity;
 import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 
@@ -65,11 +60,20 @@ public class PageController {
 	public Response page(@FormParam("page_name") String page_name) {
 		if (UserEntity.currentUser == null) 
 			return Response.ok(new Viewable("/jsp/youMustBeLoggedIn")).build();
+		System.out.print(page_name);
+		PageModel.curr_page=page_name;
+		
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("page_name", page_name);
 		map.put("user_email", UserEntity.currentUser.getEmail());
+		long TimeLineID = TimeLineEntity.getTimeLinePageID(page_name);
+		
+		map.put("time_line_id", new Long(TimeLineID).toString());
+		map.put("name", UserEntity.currentUser.getName());		
+		
 		return Response.ok(new Viewable("/jsp/PageViews/Page", map)).build();
 	}
+		
 	
 	
 	@POST

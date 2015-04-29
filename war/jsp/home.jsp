@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="com.FCI.SWE.Models.PageModel"%>
 <%@page import="com.FCI.SWE.Services.SingleChatNotification"%>
 <%@page import="com.FCI.SWE.ServicesModels.UserEntity"%>
 <%@page import="com.FCI.SWE.ServicesModels.TimeLineEntity"%>
@@ -31,13 +32,21 @@ org.json.simple.parser.*"%>
 <body>
 
 	<form action="/social/CreatePost" method="post">
-		<input type="hidden" name="owner" value="${it.name}">
-		Content:
+		<input type="hidden" name="owner" value="${it.name}"> Content:
 		<textarea rows="6" cols="50" name="content"></textarea>
 		<br> <input type="hidden" name="timelineid"
 			value="${it.timelineid}"> Post Privacy: <input type="text"
 			name="privacy" /> <br> <input type="submit" value="Create Post">
 	</form>
+	<%
+		List<String> pages = PageModel.getAllPages();
+		for (int i = 0; i < pages.size(); ++i) {
+			String s = String.format("<form action='/social/page' method='POST'> <input type='hidden' name='page_name' value=%s />  <input type='submit' value=%s /> </form><br/>",pages.get(i),pages.get(i));
+			out.print(s);
+		}
+	%>
+	
+	
 	<%
 		long usrid = UserEntity.currentUser.getId();
 		long timeLineID = TimeLineEntity.getTimeLineID(usrid);
@@ -53,7 +62,7 @@ org.json.simple.parser.*"%>
 		try {
 			obj = parser.parse(retJson);
 			JSONObject object = (JSONObject) obj;
-			
+
 			if (object.get("Status").equals("Ok")) {
 				Integer size = Integer.parseInt(object.get("Size")
 						.toString());

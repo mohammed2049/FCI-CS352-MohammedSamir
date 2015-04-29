@@ -52,11 +52,14 @@ public class TimeLineEntity {
 				.getDatastoreService();
 		Transaction txn = datastore.beginTransaction();
 
-		Query gaeQuery = new Query("TimeLine");
+		Query gaeQuery = new Query("TimeLinePage");
+		Query gaeQuery2 = new Query("TimeLine");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
+		PreparedQuery pq2 = datastore.prepare(gaeQuery2);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+		List<Entity> list2 = pq2.asList(FetchOptions.Builder.withDefaults());
 		try {
-			id = list.size() + 2;
+			id = list.size() + list2.size() + 2;
 			Entity timeLine = new Entity("TimeLine", id);
 
 			timeLine.setProperty("userID", userID);
@@ -76,10 +79,13 @@ public class TimeLineEntity {
 		Transaction txn = datastore.beginTransaction();
 
 		Query gaeQuery = new Query("TimeLinePage");
+		Query gaeQuery2 = new Query("TimeLine");
 		PreparedQuery pq = datastore.prepare(gaeQuery);
+		PreparedQuery pq2 = datastore.prepare(gaeQuery2);
 		List<Entity> list = pq.asList(FetchOptions.Builder.withDefaults());
+		List<Entity> list2 = pq2.asList(FetchOptions.Builder.withDefaults());
 		try {
-			id = list.size() + 2;
+			id = list.size() + list2.size() + 2;
 			Entity timeLine = new Entity("TimeLinePage", id);
 
 			timeLine.setProperty("pageID", pageID);
